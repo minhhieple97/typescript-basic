@@ -28,3 +28,74 @@ function mergeGeneric<T, U>(objA: T, objB: U) {
 }
 const mergeResultGeneric = mergeGeneric({ name: 'hioe' }, { age: 23 });
 console.log(mergeResultGeneric.age)// Generic function là một hình thức giúp chúng ta cung cấp thêm thông tin cho trình biên dịch có thể xác định được kết quả đầu ra có những gì. 
+
+// Trường hợp chúng ta muốn rằng buộc dữ liệu trong generic
+function mergeConstraints<T extends object, U extends number>(objA: T, objB: U) {//Trường hợp này chúng ta muốn rằng buộc generic T phải có kiểu object và U phải có kiểu number 
+    return Object.assign(objA, objB)
+}
+type Lengthy = {
+    length: number
+}
+// Hoàn toàn có thể thay bằng
+interface LengthInterface {
+    length: number
+}
+function countAndDescribe<T extends Lengthy>(element: T): [T, string] {
+    let desText = 'Got no value';
+    if (element.length === 1) {
+        desText = 'Got 1 element.'
+    }
+    else if (element.length > 1) {
+        desText = 'Got ' + element.length + ' elements';
+    }
+    return [element, desText]
+}
+console.log(countAndDescribe('Hi there.'))
+
+
+// Khi chúng ta muốn truyền tham số mà một trong những tham số là key của tham số (object) còn lại 
+function extractAndConvert<T extends object, U extends keyof T>(obj: T, key: U) {
+    return obj[key]
+}
+
+
+//  Generic class
+// Ý tưởng là đồng bộ hóa
+class DataStorage<T extends number | string | object>  {
+    private data: T[] = []
+    constructor(public text: T) {
+        this.text = text;
+    }
+    addItem(item: T) {
+        this.data.push(item)
+    }
+    removeItem(item: T) {
+        this.data.splice(this.data.indexOf(item), 1)
+    }
+    getItems() {
+        return [...this.data]
+    }
+}
+//  Chúng ta có thể đồng bộ dữ liệu đầu vào của các hàm trong class bằng generic_type t
+const textStorage = new DataStorage<string>('abc');//Đồng bộ dữ liệu đầu vào các hàm đều là string
+const numberStorage = new DataStorage<number | object
+>(100);//Đồng bộ dữ liệu đầu vào trong các hàm đều number
+
+// 
+interface CourseGoal {
+    title: string,
+    description: string,
+    completeUntil: Date
+}
+function createCourseGoal(input: string, description: string, completeUntil: Date): CourseGoal {
+    const courseGoal = {} as CourseGoal
+    courseGoal.title = input;
+    courseGoal.description = description;
+    courseGoal.completeUntil = completeUntil
+    return courseGoal
+}
+function createCourseGoalPartical<T extends CourseGoal>(input: T) {
+    return input
+}
+createCourseGoalPartical({ title: 'abc', description: 'asdfsd', completeUntil: new Date() }) 
+
