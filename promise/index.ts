@@ -31,61 +31,60 @@
 //             cb(data)
 //         })
 // }
-const wait = <U extends number | string>(time: number, value: U): Promise<string> => {
-    return new Promise((res: Function) => {
-        setTimeout(res, time, value);
-    })
-}
+const wait = (time: number, value: string): Promise<string> => {
+  return new Promise<string>((res: Function) => {
+    setTimeout(res, time, value);
+  });
+};
 const startAsyncAwait = async (cb: Function) => {
-    const result1 = await wait(1000, 'Hello');
-    cb(result1)
-    const result2 = await wait(1000, 'And Welcome');
-    cb(result2);
-    const result3 = await wait(1000, 'To Async Await Using TypeScript');
-    cb(result3);
-}
-startAsyncAwait((text: string) => console.log(text))
-// export { }
+  const result1 = await wait(1000, "Hello");
+  cb(result1);
+  const result2 = await wait(1000, "And Welcome");
+  cb(result2);
+  const result3 = await wait(1000, "To Async Await Using TypeScript");
+  cb(result3);
+};
+startAsyncAwait((text: string) => console.log(text));
 
-// Promise.all
-
-type TypeGetHero = {
-    key: keyof typeof hero
+interface TypeGetHero {
+  key: keyof typeof hero;
 }
 
 const hero = {
-    superman: {
-        name: 'Superman',
-        alias: 'Clark Kent',
-    },
-    batman: {
-        name: 'Batman',
-        alias: 'Bruce Wayne',
-    },
-    flash: {
-        name: 'The Flash',
-        alias: 'Barry Allen',
-    },
+  superman: {
+    name: "Superman",
+    alias: "Clark Kent",
+  },
+  batman: {
+    name: "Batman",
+    alias: "Bruce Wayne",
+  },
+  flash: {
+    name: "The Flash",
+    alias: "Barry Allen",
+  },
 };
-function getHero(handle: TypeGetHero): Promise<{ name: string, alias: string }> {
-    return new Promise((res: Function) => {
-        setTimeout(res, 1000, hero[handle.key]);
-    })
+function getHero<T extends TypeGetHero>(
+  handle: T
+): Promise<{ name: string; alias: string; age: number }> {
+  return new Promise((res: Function) => {
+    setTimeout(res, 1000, hero[handle.key]);
+  });
 }
-const keyHero: string[] = [
-    'superman',
-    'batman',
-    'flash'
-]
+const keyHero: string[] = ["superman", "batman", "flash"];
 
-const listPromise: Array<Promise<{ name: string, alias: string }>> = keyHero.map((el: any) => {
-    console.log(el)
-    return getHero({ key: el })
+const listPromise: Array<Promise<{
+  name: string;
+  alias: string;
+}>> = keyHero.map((el: any) => {
+  console.log(el);
+  return getHero({ key: el });
 });
 
-
 async function getHeros() {
-    const result: Array<{ name: string, alias: string }> = await Promise.all(listPromise);
-    console.log(result)
+  const result: Array<{ name: string; alias: string }> = await Promise.all(
+    listPromise
+  );
+  console.log(result);
 }
-getHeros()
+getHeros();
