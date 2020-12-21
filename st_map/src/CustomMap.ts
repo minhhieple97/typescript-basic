@@ -1,9 +1,10 @@
-type Mappable = {
+export type Mappable = {
     location: {
         lat: number,
         lng: number
     },
-    contentMarker(): string
+    contentMarker(): string,
+    color: string
 }
 export default class CustomMap {
     private info: google.maps.InfoWindow
