@@ -1,51 +1,37 @@
-import Company from "./Company"
-import User from "./User"
-type TypeObj = User | Company
-type TypeObj_ = {
-    location:{
-        lat:number,
-        lng:number
-    }
+export type Mappable = {
+    location: {
+        lat: number,
+        lng: number
+    },
+    contentMarker(): string,
+    color: string
 }
-interface TypeObj__ {
-    location:{
-        lat:number,
-        lng:number
-    }
-}
-class CustomMap {
-   private googleMap:google.maps.Map
-   private googleMarker:google.maps.Marker
-    constructor(divId:string){
-        this.googleMap = new google.maps.Map(document.getElementById(divId),{
-            zoom:1,
-            center:{
-                lat:0,
-                lng:0
+export default class CustomMap {
+    private info: google.maps.InfoWindow
+    private googleMap: google.maps.Map
+
+    constructor(divId: string) {
+        this.googleMap = new google.maps.Map(document.getElementById(divId), {
+            zoom: 1,
+            center: {
+                lat: 0,
+                lng: 0
             }
         })
-        // this.googleMarker = new google.maps.Marker();
     }
-    addUserMarket(user:User):void{
-       new google.maps.Marker({
-           map:this.googleMap,
-           position:{
-               lat:user.location.lat,
-               lng:user.location.lng
-           }
-       })
-    }
-    addCompanyMarket(company:Company):void{
-
-    }
-    addObj(obj:TypeObj__):void{
-   new google.maps.Marker({
-       map:this.googleMap,
-       position:{
-           lat:obj.location.lng,
-           lng:obj.location.lng
-       }
-   })
+    addMarket(mappable: Mappable): void {
+        const marker = new google.maps.Marker({
+            map: this.googleMap,
+            position: {
+                lat: mappable.location.lat,
+                lng: mappable.location.lng
+            }
+        });
+        marker.addListener('click', () => {
+            const infoWindow = new google.maps.InfoWindow({
+                content: mappable.contentMarker()
+            });
+            infoWindow.open(this.googleMap, marker)
+        })
     }
 }
-export default CustomMap
