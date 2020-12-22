@@ -1,16 +1,17 @@
-class NumberCollection  {
-  constructor(public arr:number[]){
-    this.arr = arr
+class NumberCollection {
+  constructor(public data: number[]) {
+    this.data = data
   }
-  compare(x:number,y:number):void{
-      if(this.arr[x]>this.arr[y]){
-         this.swap(x,y)
-      }
+  get length(): number {
+    return this.data.length
   }
-  swap(i:number,j:number):void{
-    const temp = this.arr[i];
-    this.arr[i] = this.arr[j];
-    this.arr[j] = temp
+  compare(leftIndex: number, rightIndex: number): boolean {
+    return this.data[leftIndex] > this.data[rightIndex]
+  }
+  swap(leftIndex: number, rightIndex: number): void {
+    const leftHand = this.data[leftIndex];
+    this.data[leftIndex] = this.data[rightIndex];
+    this.data[rightIndex] = leftHand
   }
 }
 export default NumberCollection
