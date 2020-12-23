@@ -19,8 +19,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 //     }
 // }
 // const person = new Person();
-// Có nhiều trường hợp mà ta cần phải thêm thông tin hoặc chỉnh sửa các thành phần của class, đặc biệt ở runtime trong trường hợp này ta cần sử dụng decorator, hiểu đơn giản decorator nhưng một hàm, hàm sẽ được áp dụng cho bất cứ thứ gì cần decorator
+// Có nhiều trường hợp mà ta cần phải thêm thông tin hoặc chỉnh sửa các thành phần của class, đặc biệt ở runtime trong trường hợp này ta cần sử dụng decorator, hiểu đơn giản decorator nhưng một hàm, hàm sẽ decorate cho bất cứ thứ gì cần (class,function,method,properties)
 // Decorator không bao giờ đứng độc lập mà nó thường được khai báo với class, method, nó được viết dưới dạng @expression với expression sẽ trỏ tới một function ở thời điểm runtime, nhiệm vụ của nó là bổ sung hoặc thay đổi cho đối tượng cần decorate
+// Decorator được excute khi class được define không phải khi chúng ta tạo instance của class đó
 //Trong javascript native khái niệm decorator đã từng xuất hiện dưới dạng functional composition
 // function doBusinessJob<T>(arg: T) {
 //     console.log('do my job with argument', arg);
@@ -64,50 +65,89 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 // @LoggerSimple
 // @WithTemplate<string>('<h1>Hello world</h1>', 'app')
 // Khi chúng ta áp dụng nhiều decorator cho một class thì thứ tự thi của nó sẽ ngược với cách bạn khai báo decorator
-var Animal = /** @class */ (function () {
-    function Animal(footCount) {
-        this.footCount = footCount;
-        this.name = 'Dgg';
-        console.log('Construtor Animal is running..');
-    }
-    Animal.prototype.running = function () {
-    };
-    return Animal;
-}());
+// class Animal {
+//     public name: string = 'Dgg'
+//     constructor(public footCount: number) {
+//         console.log('Construtor Animal is running..')
+//     }
+//     running() {
+//     }
+// }
 // const dog = new Animal(20)
 // console.log(dog)
 // Hàm loggerAnimal này sẽ chạy khi class được khởi tạo chi tiết hơn thì trước khi bạn define constructor, không phải khi một instance được tạo ra.
 // const dog = new Animal(5)
-//  Ý tưởng cốt lõi đằng sau decorator chúng ta thêm một số logic, giống như khi chúng ta sử dụng thư viện, mỗi thư viện cung cấp một loại các hàm (decorator) khi chhúng ta cần sử dụng hàm nó chúng ta láy nó và define nó cùng với một class, class sẽ được bổ sung thêm các tính năng, những decorator sẽ có ảnh hưởng tới người dùng cuối
+//  Ý tưởng cốt lõi đằng sau decorator chúng ta thêm một số logic, giống như khi chúng ta sử dụng thư viện, mỗi thư viện cung cấp một loại các hàm (decorator) khi chúng ta cần sử dụng hàm nó chúng ta lấy nó và define nó cùng với một class, class sẽ được bổ sung thêm các tính năng, những decorator sẽ có ảnh hưởng tới người dùng cuối
 // ==
 // Chúng ta có thể add decorator vào bên trong class như một thuộc tính, lúc này decorator sẽ nhận vào 2 tham số tham số đầu tiên là prototype của object (instance của Product)
-function Log(target, propertyName) {
-    console.log('First parameter decorator!', target);
-    console.log('Second parameter decorator!', propertyName);
-}
-var Product = /** @class */ (function () {
-    function Product(t, p) {
-        this.title = t;
-        this._price = p;
-    }
-    Object.defineProperty(Product.prototype, "price", {
-        set: function (val) {
-            if (val > 0) {
-                this._price = val;
-            }
-            else {
-                throw new Error("In valid price");
-            }
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Product.prototype.getPriceWithTax = function (tax) {
-        return this._price * (1 + tax);
+// function Log(target: any, propertyName: string | Symbol) {
+//     console.log('First parameter decorator!', target)
+//     console.log('Second parameter decorator!', propertyName)
+// }
+// class Product {
+//     @Log
+//     title: string;
+//     private _price: number;
+//     static countProduct: number = 0
+//     constructor(t: string, p: number) {
+//         this.title = t;
+//         this._price = p;
+//     }
+//     set price(val: number) {
+//         if (val > 0) {
+//             this._price = val
+//         }
+//         else {
+//             throw new Error("In valid price");
+//         }
+//     }
+//     getPriceWithTax(tax: number) {
+//         return this._price * (1 + tax)
+//     }
+// }
+// function logCreate(val){
+//     return function(constructor:Function){
+//     }
+// }
+// @logCreate(123)
+// class Aniaml {
+//     constructor(public name:string,public weight:number) {
+//         console.log("CREATE ANIMAL INSTANCE _")
+//         this.name = name;
+//         this.weight = weight
+//     }
+// }
+// const dog = new Aniaml('Nick',45)
+function Logger(value) {
+    console.log('LOGGER RUNNING');
+    var hook = document.getElementById('app');
+    hook.innerHTML = '<h1>Le minh hiep</h1>';
+    return function (constructor) {
+        // console.log('LOGGING....');
+        // console.log(constructor)
+        console.log('CONSTRUCTOR LOGGER RUNNING');
     };
-    Product.countProduct = 0;
-    __decorate([
-        Log
-    ], Product.prototype, "title", void 0);
-    return Product;
+}
+function WithTemplate(template, hookId) {
+    console.log('WITH TEMPLATE RUNNING');
+    return function (constructor) {
+        var hook = document.getElementById(hookId);
+        hook.innerHTML = template;
+        console.log('CONSTRUCTOR WITH TEMPLATE RUNNING');
+    };
+}
+var Person = /** @class */ (function () {
+    function Person(name, age) {
+        this.name = name;
+        this.age = age;
+        this.name = name;
+        this.age = age;
+        console.log('Creating person object...');
+    }
+    Person = __decorate([
+        Logger('123'),
+        WithTemplate('<h1>Le minh hiep</h1>', 'app')
+    ], Person);
+    return Person;
 }());
+var hiep = new Person('hiep', 23);
