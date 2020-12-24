@@ -1,6 +1,9 @@
-class CharactersCollection {
+import Sorter from "./Sorter";
+
+class CharactersCollection extends Sorter {
     public collection: string[]
     constructor(public data: string) {
+        super()
         this.data = data;
         this.collection = data.split('')
     }
