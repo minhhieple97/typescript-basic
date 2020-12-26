@@ -1,6 +1,6 @@
+import { MatchData } from "./MatchData";
 import { MATCH_RESULT } from "./MatchResults";
 import { dateStringToDate } from "./ultil";
-type MatchData = [Date, string, string, number, number, string, string]
 interface DataReader {
     read(): void;
     data: string[][]
@@ -9,8 +9,8 @@ class MatchReader {
     matches: MatchData[] = []
     constructor(public reader: DataReader) { }
     load(): void {
-        this.reader.read();
-        this.reader.data.map((row: string[]) => {
+       this.reader.read();
+       this.matches = this.reader.data.map((row: string[]):MatchData => {
             return [
                 dateStringToDate(row[0]),
                 row[1],

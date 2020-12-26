@@ -8,7 +8,7 @@ var MatchReader = /** @class */ (function () {
     }
     MatchReader.prototype.load = function () {
         this.reader.read();
-        this.reader.data.map(function (row) {
+        this.matches = this.reader.data.map(function (row) {
             return [
                 ultil_1.dateStringToDate(row[0]),
                 row[1],

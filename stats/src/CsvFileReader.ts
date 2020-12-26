@@ -1,6 +1,4 @@
 import fs from 'fs'
-import { MATCH_RESULT } from './MatchResults';
-import { dateStringToDate } from './ultil';
 class CsvFileReader {
     data: string[][] = []
     constructor(public filename: string) {
