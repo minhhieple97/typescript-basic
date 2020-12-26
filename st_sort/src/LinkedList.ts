@@ -1,3 +1,5 @@
+import Sorter from "./Sorter";
+
 class Node {
     public next: Node | null
     constructor(public val: number) {
@@ -6,26 +8,14 @@ class Node {
     }
 }
 export { Node }
-class LinkedList {
-    private longs: number;
-    public head: Node | null;
-    public tail: Node | null
-    constructor() {
-        this.longs = 0;
-        this.head = null;
-        this.tail = null;
-    }
+class LinkedList extends Sorter {
+    private longs: number = 0;
+    public head: Node | null = null
+    public tail: Node | null = null
     push(node: Node): void {
         if (this.tail && this.head) {
-            if (this.length === 1) {
-                this.head.next = this.tail;
-                this.tail = node;
-            }
-            else {
-                this.tail.next = node;
-                this.tail = node;
-
-            }
+            this.tail.next = node;
+            this.tail = node;
         }
         else {
             this.head = node;
@@ -70,9 +60,8 @@ class LinkedList {
         }
         let result: Node | null = this.head;
         while (result) {
-            console.log('val', result.val);
-            result = result.next;
             console.log({ result })
+            result = result.next;
         }
     }
 }
