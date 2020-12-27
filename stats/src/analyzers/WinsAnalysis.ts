@@ -2,10 +2,8 @@ import { MatchData } from "../MatchData";
 import { MATCH_RESULT } from "../MatchResults";
 import { Analyzer } from "../Summary";
 
-export class WinAnalysis implements Analyzer {
-    constructor(public team:string){
-
-    }
+class WinAnalysis implements Analyzer {
+    constructor(public team:string){}
     run(matches:MatchData[]):string{
         let win = 0;
         for (const match of matches) {
@@ -15,3 +13,4 @@ export class WinAnalysis implements Analyzer {
         return (`Team ${this.team} won ${win} games`)
     }
 }
+export default WinAnalysis

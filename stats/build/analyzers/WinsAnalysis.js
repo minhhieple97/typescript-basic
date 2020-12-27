@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.WinAnalysis = void 0;
 var MatchResults_1 = require("../MatchResults");
 var WinAnalysis = /** @class */ (function () {
     function WinAnalysis(team) {
@@ -19,4 +18,4 @@ var WinAnalysis = /** @class */ (function () {
     };
     return WinAnalysis;
 }());
-exports.WinAnalysis = WinAnalysis;
+exports.default = WinAnalysis;

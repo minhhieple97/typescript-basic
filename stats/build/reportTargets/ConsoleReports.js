@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ConsoleReports = void 0;
 var ConsoleReports = /** @class */ (function () {
     function ConsoleReports() {
     }
@@ -9,4 +8,4 @@ var ConsoleReports = /** @class */ (function () {
     };
     return ConsoleReports;
 }());
-exports.ConsoleReports = ConsoleReports;
+exports.default = ConsoleReports;
