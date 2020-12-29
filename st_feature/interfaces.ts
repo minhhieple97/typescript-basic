@@ -21,7 +21,6 @@ const oldCivic = {
     }
 }
 const printVehicle: (obj: Vehicle_) => void = (vehicle: Vehicle_): void => {
-
 }
 printVehicle(oldCivic)
 // Về cơ bản interface thiết lập một số rằng buộc cho class muốn inplement nó, sự khác biệt cơ bản của interface vs abstract là một class có thể implement từ nhiều interface (tận dụng lợi ích của việc đa kế thừa) nhưng không thể extends từ nhiều abstract class..
