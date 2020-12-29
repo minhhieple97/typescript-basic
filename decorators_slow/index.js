@@ -1,4 +1,5 @@
 "use strict";
+// const { performance } = require('perf_hooks');
 // function Logger(logString: string) {
 //     return function (constructor: Function) {
 //         console.log(logString);
@@ -19,7 +20,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 //     }
 // }
 // const person = new Person();
-// Có nhiều trường hợp mà ta cần phải thêm thông tin hoặc chỉnh sửa các thành phần của class, đặc biệt ở runtime trong trường hợp này ta cần sử dụng decorator, hiểu đơn giản decorator nhưng một hàm, hàm sẽ decorate cho bất cứ thứ gì cần (class,function,method,properties)
+// Có nhiều trường hợp mà ta cần phải thêm thông tin hoặc chỉnh sửa các thành phần của class, đặc biệt ở runtime thì có rất nhiều trường hợp ta cần sử dụng decorator, hiểu đơn giản decorator là một pattern trong lập trình mà bạn bọc một thứ gì đó để thay đổi hành vi của nó, decorator về cơ bản là một hàm, hàm sẽ decorate cho bất cứ thứ gì cần(class,function,method,properties) decorator
 // Decorator không bao giờ đứng độc lập mà nó thường được khai báo với class, method, nó được viết dưới dạng @expression với expression sẽ trỏ tới một function ở thời điểm runtime, nhiệm vụ của nó là bổ sung hoặc thay đổi cho đối tượng cần decorate
 // Decorator được excute khi class được define không phải khi chúng ta tạo instance của class đó
 //Trong javascript native khái niệm decorator đã từng xuất hiện dưới dạng functional composition
@@ -118,36 +119,95 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 //     }
 // }
 // const dog = new Aniaml('Nick',45)
-function Logger(value) {
-    console.log('LOGGER RUNNING');
-    var hook = document.getElementById('app');
-    hook.innerHTML = '<h1>Le minh hiep</h1>';
-    return function (constructor) {
-        // console.log('LOGGING....');
-        // console.log(constructor)
-        console.log('CONSTRUCTOR LOGGER RUNNING');
+// function Logger(value) {
+//     console.log('LOGGER RUNNING')
+//     const hook = document.getElementById('app')!;
+//     hook.innerHTML = '<h1>Le minh hiep</h1>'
+//     return function (constructor: any) {
+//         // console.log('LOGGING....')
+//         console.log('CONSTRUCTOR LOGGER RUNNING')
+//     }
+// }
+// function WithTemplate(template: string, hookId: string) {
+//     console.log('WITH TEMPLATE RUNNING')
+//     return function (constructor: Function) {
+//         const hook = document.getElementById(hookId)!;
+//         hook.innerHTML = template;
+//         console.log('CONSTRUCTOR WITH TEMPLATE RUNNING')
+//     }
+// }
+// @Logger('123')
+// @WithTemplate('<h1>Le minh hiep</h1>', 'app')
+// class Person {
+//     constructor(public name: string, public age: number) {
+//         this.name = name;
+//         this.age = age;
+//         console.log('CONSTRUCTOR PERSON RUNNING')
+//     }
+// }
+// const hiep = new Person('hiep', 23)
+// method decorator : có nhiệm vụ decorator cho một method trong class
+// nó sẽ nhận vào 3 tham số lần lượt là class chứa meothod, tên của phương thức, một số thông tin về các đặc điểm của method như argument...
+var myMethodDecorator = function (target, propertyKey, description) {
+    console.log({ target: target }, { propertyKey: propertyKey }, { description: description });
+};
+// properties decorator : khá giống với method decorator nhưng nó có nhiệm vụ decorator cho một thuộc tính, khác biệt duy nhất với method decorator là nó chỉ có 2 đối số
+var myPropertiesDecorator = function (target, propertyKey) {
+    console.log({ target: target, propertyKey: propertyKey });
+};
+var measure = function (target, propertyKey, descriptor) {
+    console.log("BEFORE LAUNCH RUNNING...");
+    var originalMethod = descriptor.value;
+    descriptor.value = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        var start = performance.now();
+        var result = originalMethod.apply(this, args);
+        var finish = performance.now();
+        console.log("Execution time :" + (finish - start) + " milliseconds");
+        return result;
     };
-}
-function WithTemplate(template, hookId) {
-    console.log('WITH TEMPLATE RUNNING');
-    return function (constructor) {
-        var hook = document.getElementById(hookId);
-        hook.innerHTML = template;
-        console.log('CONSTRUCTOR WITH TEMPLATE RUNNING');
+    return descriptor;
+};
+var minimunFuel = function (fuel) { return function (target, propertyKey, descriptor) {
+    console.log({ target: target, propertyKey: propertyKey, descriptor: descriptor });
+    var originalMethod = descriptor.value;
+    descriptor.value = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        if (this.fuel < fuel) {
+            console.log("Not enough fuel!");
+        }
+        else {
+            originalMethod.apply(this, args);
+        }
     };
-}
-var Person = /** @class */ (function () {
-    function Person(name, age) {
-        this.name = name;
-        this.age = age;
-        this.name = name;
-        this.age = age;
-        console.log('Creating person object...');
+}; };
+// Decorator factory
+// Chúng ta sử dụng Decorator fatory khi cần cấu hình decorator sẽ hoạt động khác nhau cho mỗi bối cảnh khác nhau .
+var changeValueDecorator = function (value) { return function (target, propertyKey) {
+    // Object.defineProperty(target, propertyKey, propertyKey)
+    console.log({ propertyKey: propertyKey });
+}; };
+var Rocket = /** @class */ (function () {
+    function Rocket() {
+        this.fuel = 200;
     }
-    Person = __decorate([
-        Logger('123'),
-        WithTemplate('<h1>Le minh hiep</h1>', 'app')
-    ], Person);
-    return Person;
+    Rocket.prototype.launch = function () {
+        console.log("Launching rocket in 3..2..1");
+    };
+    __decorate([
+        minimunFuel(100)
+    ], Rocket.prototype, "launch", null);
+    return Rocket;
 }());
-var hiep = new Person('hiep', 23);
+var rocket = new Rocket();
+// rocket.launch('', '')
+console.log(rocket.fuel);
+rocket.launch();
+// Các use case sử dụng Decorators trong TypeScript
+// export default {}
