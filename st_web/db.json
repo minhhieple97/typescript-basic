@@ -1,7 +1,9 @@
 {
-    "users": [
-        {
-            "id": "1"
-        }
-    ]
+  "users": [
+    {
+      "name": "Le Minh Hiep",
+      "age": 12,
+      "id": "1"
+    }
+  ]
 }
