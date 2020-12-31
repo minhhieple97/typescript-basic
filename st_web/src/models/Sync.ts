@@ -1,26 +1,21 @@
 import axios, { AxiosPromise, AxiosResponse } from "axios";
-interface UserProps {
-    id?: string,
-    name?: string;
-    age?: number;
+interface HasId {
+    id?: number,
 }
-class Sync<T> {
-    fetch(id: string): AxiosPromise<T> {
-        return axios.get(`http://localhost:3000/users/${id}}`)
-            .then((response: AxiosResponse) => {
-                return response
+class Sync<T extends HasId> {
+    constructor(public rootUrl: string) { }
+    fetch(id: number): AxiosPromise<T> {
+        return axios.get(`${this.rootUrl}/${id}`)
+            .then((res: AxiosResponse) => {
+                return res.data
             })
     }
-    save(id: string, data: T): AxiosPromise<T> {
-        return this.fetch(id).then((res) => {
-            if (res.data) {
-                return axios.put(`http://localhost:3000/users/${id}`, data).then(res => res)
-            }
-            else {
-                return axios.post(`http://localhost:3000/users`, data).then(res => res)
-            }
-        });
-
+    save(data: T): AxiosPromise<T> {
+        const { id } = data
+        if (data.id) {
+            return axios.put(`${this.rootUrl}/${data.id}`, data).then((res: AxiosResponse) => res.data)
+        }
+        return axios.post(`${this.rootUrl}`, data).then((res: AxiosResponse) => res.data)
     }
 
 }
