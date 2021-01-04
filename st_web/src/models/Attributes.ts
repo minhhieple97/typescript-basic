@@ -7,5 +7,4 @@ class Attributes<T> {
         Object.assign(this.data, update);
     }
 }
-
 export default Attributes 

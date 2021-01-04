@@ -6,6 +6,7 @@ interface Event {
 }
 class Eventing implements Event {
     events: { [key: string]: Cb[] } = {};
+    abc: string = ''
     on(eventName: string, callback: Cb): void {
         const handlers = this.events[eventName] || [];
         handlers.push(callback);
