@@ -1,9 +1,16 @@
+// import Collection from './models/Collection';
+// import User, { UserProps } from './models/User';
+// const collection = User.buildUserCollection()
+// collection.fetch()
+// collection.on('change', () => {
+//     console.log(collection.models)
+
 import User from "./models/User";
-const user = User.buildUser({ id: 1, name: 'newer name', age: 21 });
-user.on('change', () => {
-    console.log('User was change', user)
-});
-user.on('save', () => {
-    console.log('User was save', user)
-})
-user.save()
+import UserForm from "./views/UserForm";
+
+// })
+const userForm = new UserForm(
+    document.getElementById('root')!,
+    User.buildUser({ name: 'hiep', age: 24 })
+);
+userForm.render()
